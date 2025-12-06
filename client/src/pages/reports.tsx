@@ -31,6 +31,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 const monthlyData = [
   { name: "Jan", revenue: 4000, deals: 24 },
@@ -51,15 +53,18 @@ const sourceData = [
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))'];
 
-import { useToast } from "@/hooks/use-toast";
-
 export default function ReportsPage() {
   const { toast } = useToast();
+  const [dateRange, setDateRange] = useState("30d");
 
   const handleExport = () => {
     toast({
       title: "Report Generated",
-      description: "Your monthly performance report is ready for download.",
+      description: `Your performance report for the ${
+        dateRange === "7d" ? "last 7 days" : 
+        dateRange === "30d" ? "last 30 days" : 
+        dateRange === "90d" ? "last 3 months" : "year to date"
+      } is ready for download.`,
     });
   };
 
@@ -72,9 +77,20 @@ export default function ReportsPage() {
             <p className="text-muted-foreground">Deep dive into your sales performance and metrics.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="gap-2">
-              <Calendar className="w-4 h-4" /> Last 30 Days
-            </Button>
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-[180px] bg-background">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <SelectValue />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7d">Last 7 Days</SelectItem>
+                <SelectItem value="30d">Last 30 Days</SelectItem>
+                <SelectItem value="90d">Last 3 Months</SelectItem>
+                <SelectItem value="ytd">Year to Date</SelectItem>
+              </SelectContent>
+            </Select>
             <Button className="gap-2" onClick={handleExport}>
               <Download className="w-4 h-4" /> Export Report
             </Button>
