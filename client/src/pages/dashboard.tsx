@@ -101,6 +101,8 @@ const getStatusColor = (status: string) => {
   }
 };
 
+import { LeadDialog } from "@/components/leads/lead-dialog";
+
 export default function Dashboard() {
   return (
     <DashboardLayout>
@@ -110,9 +112,7 @@ export default function Dashboard() {
             <h1 className="text-3xl font-display font-bold tracking-tight">Dashboard</h1>
             <p className="text-muted-foreground">Overview of your sales performance.</p>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" /> Add Lead
-          </Button>
+          <LeadDialog />
         </div>
 
         {/* Stats Grid */}

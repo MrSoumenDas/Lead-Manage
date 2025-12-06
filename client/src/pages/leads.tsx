@@ -67,6 +67,8 @@ const getStatusColor = (status: string) => {
   }
 };
 
+import { LeadDialog } from "@/components/leads/lead-dialog";
+
 export default function LeadsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -94,9 +96,7 @@ export default function LeadsPage() {
             <Button variant="outline" className="gap-2">
               <Download className="w-4 h-4" /> Export
             </Button>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" /> Add Lead
-            </Button>
+            <LeadDialog />
           </div>
         </div>
 
