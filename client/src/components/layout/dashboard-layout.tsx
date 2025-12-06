@@ -9,7 +9,9 @@ import {
   LogOut, 
   Bell, 
   Search,
-  Menu
+  Menu,
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -23,10 +25,55 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SidebarProps {
   children: React.ReactNode;
 }
+
+const notifications = [
+  {
+    id: 1,
+    title: "New Lead Assigned",
+    description: "Sarah Smith has been assigned to you.",
+    time: "2 mins ago",
+    unread: true,
+    icon: Users,
+    color: "text-blue-500"
+  },
+  {
+    id: 2,
+    title: "Deal Closed!",
+    description: "TechFlow Inc. deal marked as won.",
+    time: "1 hour ago",
+    unread: true,
+    icon: CheckCircle2,
+    color: "text-green-500"
+  },
+  {
+    id: 3,
+    title: "Meeting Reminder",
+    description: "Call with Michael Johnson at 2 PM.",
+    time: "3 hours ago",
+    unread: false,
+    icon: AlertCircle,
+    color: "text-orange-500"
+  },
+  {
+    id: 4,
+    title: "System Update",
+    description: "Maintenance scheduled for Sunday night.",
+    time: "1 day ago",
+    unread: false,
+    icon: Settings,
+    color: "text-gray-500"
+  }
+];
 
 export function DashboardLayout({ children }: SidebarProps) {
   const [location] = useLocation();
@@ -121,10 +168,58 @@ export function DashboardLayout({ children }: SidebarProps) {
           </div>
 
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="h-5 w-5 text-muted-foreground" />
-              <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive" />
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="h-5 w-5 text-muted-foreground" />
+                  <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="flex items-center justify-between px-4 py-3 border-b">
+                  <h4 className="font-semibold text-sm">Notifications</h4>
+                  <span className="text-xs text-muted-foreground">2 unread</span>
+                </div>
+                <ScrollArea className="h-[300px]">
+                  <div className="divide-y">
+                    {notifications.map((notification) => (
+                      <div 
+                        key={notification.id} 
+                        className={cn(
+                          "flex gap-3 p-4 hover:bg-muted/50 transition-colors cursor-pointer",
+                          notification.unread ? "bg-muted/20" : ""
+                        )}
+                      >
+                        <div className={cn("mt-1", notification.color)}>
+                          <notification.icon className="w-4 h-4" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className={cn("text-sm font-medium leading-none", notification.unread && "font-semibold")}>
+                            {notification.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {notification.description}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground pt-1">
+                            {notification.time}
+                          </p>
+                        </div>
+                        {notification.unread && (
+                          <div className="ml-auto mt-1.5">
+                            <span className="h-2 w-2 rounded-full bg-blue-500 block" />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+                <div className="p-2 border-t text-center">
+                  <Button variant="ghost" size="sm" className="w-full text-xs h-8">
+                    Mark all as read
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
