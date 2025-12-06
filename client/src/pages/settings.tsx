@@ -17,7 +17,20 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 
+import { useSearch, useLocation } from "wouter";
+
 export default function SettingsPage() {
+  const search = useSearch();
+  const [location, setLocation] = useLocation();
+  
+  // Parse query string to get tab
+  const params = new URLSearchParams(search);
+  const activeTab = params.get("tab") || "general";
+
+  const handleTabChange = (value: string) => {
+    setLocation(`/dashboard/settings?tab=${value}`);
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6 max-w-5xl mx-auto">
@@ -26,7 +39,7 @@ export default function SettingsPage() {
           <p className="text-muted-foreground">Manage your account settings and preferences.</p>
         </div>
 
-        <Tabs defaultValue="general" className="w-full">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="w-full justify-start h-auto p-0 bg-transparent border-b rounded-none gap-6 overflow-x-auto">
             <TabsTrigger 
               value="general" 
