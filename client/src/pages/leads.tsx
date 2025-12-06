@@ -67,9 +67,11 @@ const getStatusColor = (status: string) => {
   }
 };
 
+import { useToast } from "@/hooks/use-toast";
 import { LeadDialog } from "@/components/leads/lead-dialog";
 
 export default function LeadsPage() {
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
 
@@ -84,6 +86,21 @@ export default function LeadsPage() {
     return matchesSearch && matchesStatus;
   });
 
+  const handleExport = () => {
+    toast({
+      title: "Export Started",
+      description: "Your leads list is being exported to CSV...",
+    });
+    
+    // Simulate download delay
+    setTimeout(() => {
+      toast({
+        title: "Export Complete",
+        description: "Leads_Export_2024.csv has been downloaded.",
+      });
+    }, 1500);
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6 h-full">
@@ -93,7 +110,7 @@ export default function LeadsPage() {
             <p className="text-muted-foreground">Track, organize, and nurture your potential customers.</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2" onClick={handleExport}>
               <Download className="w-4 h-4" /> Export
             </Button>
             <LeadDialog />

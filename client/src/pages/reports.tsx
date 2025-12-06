@@ -51,7 +51,18 @@ const sourceData = [
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))'];
 
+import { useToast } from "@/hooks/use-toast";
+
 export default function ReportsPage() {
+  const { toast } = useToast();
+
+  const handleExport = () => {
+    toast({
+      title: "Report Generated",
+      description: "Your monthly performance report is ready for download.",
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col gap-6">
@@ -64,7 +75,7 @@ export default function ReportsPage() {
             <Button variant="outline" className="gap-2">
               <Calendar className="w-4 h-4" /> Last 30 Days
             </Button>
-            <Button className="gap-2">
+            <Button className="gap-2" onClick={handleExport}>
               <Download className="w-4 h-4" /> Export Report
             </Button>
           </div>
